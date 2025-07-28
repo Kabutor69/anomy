@@ -1,103 +1,140 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+const fetchPosts = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=3`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  return data.posts || [];
+};
+
+const Home = async () => {
+  const posts = await fetchPosts();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="bg-black min-h-screen">
+      <section className=" mx-auto px-3 py-40 flex items-center justify-center gap-12 ">
+        <div className="text-center md:w-1/2 w-3/4">
+          <h1 className={`md:text-9xl text-5xl font-bold text-white `}>
+            Say Anything, Be No One.
+          </h1>
+          <p className="mt-6 md:text-4xl text-2xl text-white leading-relaxed">
+            Share your thoughts anonymously , No login , No identity , Just
+            words.
+          </p>
+          <div className="mt-8 flex justify-center gap-6">
+            <Link
+              href="/read"
+              className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105"
+            >
+              Start Reading
+            </Link>
+            <Link
+              href="/write"
+              className="bg-transparent border-2 border-lime-400 text-white hover:bg-lime-400 hover:text-black px-6 py-3 rounded-xl font-semibold transition-all self-center md:text-2xl text-xl hover:scale-105"
+            >
+              Start Writing
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12">
+        <h2 className="md:text-4xl text-3xl font-bold text-center mb-10">
+          How It Works
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+          {[
+            {
+              title: "Write",
+              description: "Express yourself without revealing who you are.",
+            },
+            {
+              title: "Read",
+              description:
+                "Discover what others have shared without any barriers.",
+            },
+            {
+              title: "Forget",
+              description:
+                "Leave no trace behind, your identity is never tied to your words.",
+            },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl  transition-all bg-neutral-950 hover:scale-105 "
+            >
+              <div>
+                <h3 className="md:text-3xl text-2xl font-bold text-lime-300">
+                  {item.title}
+                </h3>
+                <p className="md:text-xl text-lg text-white mt-2 mb-6">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12">
+        <h2 className="md:text-4xl text-3xl font-bold text-center mb-10">
+          Why Anonymous?
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+          {[
+            {
+              title: "Freedom of Expression",
+              description: "Speak your mind without fear of judgment.",
+            },
+            {
+              title: "Privacy in the Digital Age",
+              description:
+                "Protect your personal information by staying anonymous.",
+            },
+            {
+              title: "Honest Conversations",
+              description: "Engage in open discussions without reservations.",
+            },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl  transition-all bg-neutral-950 hover:scale-105 "
+            >
+              <div>
+                <h3 className="md:text-3xl text-2xl font-bold text-lime-300">
+                  {item.title}
+                </h3>
+                <p className="md:text-xl text-lg text-white mt-2 mb-6">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12 mb-16">
+        <h2 className="md:text-4xl text-3xl font-bold text-center mb-10">
+          Recent Posts
+        </h2>
+        <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
+          {posts.map((item: any, index: number) => (
+            <div
+              key={index}
+              className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
+            >
+              <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
+            </div>
+          ))}
+          {posts.length === 0 && (
+            <p className="text-neutral-400 text-center">No posts yet.</p>
+          )}
+        </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default Home;
