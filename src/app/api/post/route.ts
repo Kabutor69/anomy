@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Collection, Document } from "mongodb";
 import clientPromise from "@/lib/mongodb";
 
 export async function POST(req: Request) {
@@ -12,8 +11,8 @@ export async function POST(req: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db("anomy");
-    const collection: Collection<Document> = db.collection("posts");
+    const db = client.db("anomy"); 
+    const collection = db.collection("posts");
 
     await collection.insertOne({
       message,
@@ -21,7 +20,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_HOST}/write`);
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("API POST error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

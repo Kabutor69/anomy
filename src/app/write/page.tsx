@@ -1,42 +1,19 @@
-"use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
+import Link from "next/link";
 
-interface Post {
-  _id?: string;
-  message: string;
-}
+const fetchPosts = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=4`, {
+    cache: "no-store",
+  });
 
-const Write = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loadingPosts, setLoadingPosts] = useState(false);
+  if (!res.ok) return [];
 
-  const fetchRecentPosts = useCallback(async () => {
-    setLoadingPosts(true);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=4`, {
-        cache: "no-store",
-      });
+  const data = await res.json();
+  return data.posts || [];
+};
 
-      if (!res.ok) {
-        console.error("Failed to fetch recent posts for write page:", res.status, res.statusText);
-        setPosts([]);
-        return;
-      }
-
-      const data = await res.json();
-      setPosts((data.posts || []) as Post[]);
-    } catch (error: unknown) {
-      console.error("Error fetching recent posts:", error);
-      setPosts([]);
-    } finally {
-      setLoadingPosts(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchRecentPosts();
-  }, [fetchRecentPosts]);
-
+const Write = async () => {
+  const posts = await fetchPosts();
 
   return (
     <main className="bg-black min-h-screen">
@@ -46,7 +23,8 @@ const Write = () => {
             Speak As None, Judgment Free .
           </h1>
           <p className="mt-6 md:text-4xl text-2xl text-white leading-relaxed">
-            Share your thoughts anonymously, No login, No identity, Just words.
+            Share your thoughts anonymously , No login , No identity , Just
+            words.
           </p>
         </div>
       </section>
@@ -80,19 +58,16 @@ const Write = () => {
           Recent Posts
         </h2>
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
-          {loadingPosts ? (
-            <p className="text-neutral-400 text-center">Loading recent posts...</p>
-          ) : posts.length === 0 ? (
+          {posts.map((item: any, index: number) => (
+            <div
+              key={index}
+              className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-xl hover:font-semibold"
+            >
+              <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
+            </div>
+          ))}
+          {posts.length === 0 && (
             <p className="text-neutral-400 text-center">No posts yet.</p>
-          ) : (
-            posts.map((item: Post, index: number) => (
-              <div
-                key={item._id || index}
-                className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-xl hover:font-semibold"
-              >
-                <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
-              </div>
-            ))
           )}
         </div>
       </section>

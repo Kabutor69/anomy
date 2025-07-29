@@ -1,26 +1,18 @@
 import Link from "next/link";
 
-interface Post {
-  _id?: string;
-  message: string;
-}
-
-const fetchPosts = async (): Promise<Post[]> => {
+const fetchPosts = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=3`, {
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    console.error("Failed to fetch posts for home page:", res.status, res.statusText);
-    return [];
-  }
+  if (!res.ok) return [];
 
   const data = await res.json();
-  return (data.posts || []) as Post[];
+  return data.posts || [];
 };
 
 const Home = async () => {
-  const posts: Post[] = await fetchPosts();
+  const posts = await fetchPosts();
 
   return (
     <main className="bg-black min-h-screen">
@@ -30,7 +22,8 @@ const Home = async () => {
             Say Anything, Be No One.
           </h1>
           <p className="mt-6 md:text-4xl text-2xl text-white leading-relaxed">
-            Share your thoughts anonymously, No login, No identity, Just words.
+            Share your thoughts anonymously , No login , No identity , Just
+            words.
           </p>
           <div className="mt-8 flex justify-center gap-6">
             <Link
@@ -71,7 +64,7 @@ const Home = async () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl transition-all bg-neutral-950 hover:scale-105 "
+              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl  transition-all bg-neutral-950 hover:scale-105 "
             >
               <div>
                 <h3 className="md:text-3xl text-2xl font-bold text-lime-300">
@@ -108,7 +101,7 @@ const Home = async () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl transition-all bg-neutral-950 hover:scale-105 "
+              className="h-full flex flex-col justify-between p-10 hover:shadow-lg shadow-neutral-600 border border-white rounded-xl  transition-all bg-neutral-950 hover:scale-105 "
             >
               <div>
                 <h3 className="md:text-3xl text-2xl font-bold text-lime-300">
@@ -127,10 +120,10 @@ const Home = async () => {
           Recent Posts
         </h2>
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
-          {posts.map((item: Post, index: number) => (
+          {posts.map((item: any, index: number) => (
             <div
-              key={item._id || index}
-              className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
+              key={index}
+              className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
             >
               <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
             </div>

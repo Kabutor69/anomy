@@ -1,31 +1,23 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB;
+const uri = process.env.MONGODB_URI!;
+const options = {};
 
-if (!uri) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local or your Vercel project settings.");
-}
-
-if (!dbName) {
-  throw new Error("Please define the MONGODB_DB environment variable inside .env.local or your Vercel project settings. It specifies which database to connect to.");
-}
-
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-}
-
-let client: MongoClient;
+let client;
 let clientPromise: Promise<MongoClient>;
 
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please add your MongoDB URI to .env file");
+}
+
 if (process.env.NODE_ENV === "development") {
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri);
-    global._mongoClientPromise = client.connect();
+  if (!(global as any)._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    (global as any)._mongoClientPromise = client.connect();
   }
-  clientPromise = global._mongoClientPromise;
+  clientPromise = (global as any)._mongoClientPromise;
 } else {
-  client = new MongoClient(uri);
+  client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
 
