@@ -50,7 +50,7 @@ const Read = () => {
           setHasMore(false);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
     } finally {
@@ -101,7 +101,7 @@ const Read = () => {
           </button>
         )}
         {!hasMore && posts.length > 0 && !loading && (
-          <p className="text-neutral-400 text-center mt-4">You've reached the end of the posts.</p>
+          <p className="text-neutral-400 text-center mt-4">You&apos;ve reached the end of the posts.</p>
         )}
       </section>
 
