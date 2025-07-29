@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 
 const fetchPosts = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=4`, {
