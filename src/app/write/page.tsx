@@ -1,27 +1,42 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 interface Post {
   _id?: string;
   message: string;
 }
 
-const fetchPosts = async (): Promise<Post[]> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=4`, {
-    cache: "no-store",
-  });
+const Write = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loadingPosts, setLoadingPosts] = useState(false);
 
-  if (!res.ok) {
-    console.error("Failed to fetch recent posts for write page:", res.status, res.statusText);
-    return [];
-  }
+  const fetchRecentPosts = useCallback(async () => {
+    setLoadingPosts(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=4`, {
+        cache: "no-store",
+      });
 
-  const data = await res.json();
-  return (data.posts || []) as Post[];
-};
+      if (!res.ok) {
+        console.error("Failed to fetch recent posts for write page:", res.status, res.statusText);
+        setPosts([]);
+        return;
+      }
 
-const Write = async () => {
-  const posts: Post[] = await fetchPosts();
+      const data = await res.json();
+      setPosts((data.posts || []) as Post[]);
+    } catch (error: unknown) {
+      console.error("Error fetching recent posts:", error);
+      setPosts([]);
+    } finally {
+      setLoadingPosts(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRecentPosts();
+  }, [fetchRecentPosts]);
+
 
   return (
     <main className="bg-black min-h-screen">
@@ -65,16 +80,19 @@ const Write = async () => {
           Recent Posts
         </h2>
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
-          {posts.map((item: Post, index: number) => (
-            <div
-              key={item._id || index}
-              className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-xl hover:font-semibold"
-            >
-              <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
-            </div>
-          ))}
-          {posts.length === 0 && (
+          {loadingPosts ? (
+            <p className="text-neutral-400 text-center">Loading recent posts...</p>
+          ) : posts.length === 0 ? (
             <p className="text-neutral-400 text-center">No posts yet.</p>
+          ) : (
+            posts.map((item: Post, index: number) => (
+              <div
+                key={item._id || index}
+                className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-xl hover:font-semibold"
+              >
+                <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
+              </div>
+            ))
           )}
         </div>
       </section>
