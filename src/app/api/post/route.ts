@@ -7,11 +7,14 @@ export async function POST(req: Request) {
     const message = body.get("message")?.toString();
 
     if (!message || message.trim() === "") {
-      return NextResponse.json({ error: "Message is required." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Message is required." },
+        { status: 400 }
+      );
     }
 
     const client = await clientPromise;
-    const db = client.db("anomy"); 
+    const db = client.db("anomy");
     const collection = db.collection("posts");
 
     await collection.insertOne({
@@ -20,8 +23,16 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_HOST}/write`);
-  } catch (error: any) {
-    console.error("API POST error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("API POST error:", error.message);
+    } else {
+      console.error("API POST error:", error);
+    }
+
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

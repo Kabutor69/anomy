@@ -2,39 +2,44 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
+type Post = {
+  _id?: string;
+  message: string;
+  createdAt?: string;
+};
+
 const Read = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const limit = 15;
 
   const fetchPosts = async () => {
-  if (loading || !hasMore) return;
+    if (loading || !hasMore) return;
 
-  setLoading(true);
-  const nextSkip = skip; 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_HOST}/api/read?limit=${limit}&skip=${nextSkip}`,
-    { cache: "no-store" }
-  );
-  const data = await res.json();
+    setLoading(true);
+    const nextSkip = skip;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/api/read?limit=${limit}&skip=${nextSkip}`,
+      { cache: "no-store" }
+    );
 
-  if (!res.ok || !data.posts) {
+    const data = await res.json();
+
+    if (!res.ok || !data.posts) {
+      setLoading(false);
+      return;
+    }
+
+    if (data.posts.length < limit) {
+      setHasMore(false);
+    }
+
+    setPosts((prev) => [...prev, ...data.posts]);
+    setSkip((prev) => prev + limit);
     setLoading(false);
-    return;
-  }
-
-  if (data.posts.length < limit) {
-    setHasMore(false); 
-  }
-
-  setPosts((prev) => [...prev, ...data.posts]);
-  setSkip((prev) => prev + limit);
-  setLoading(false);
-};
-
-
+  };
 
   useEffect(() => {
     fetchPosts();
@@ -57,7 +62,7 @@ const Read = () => {
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
           {posts.map((item, index) => (
             <div
-              key={index}
+              key={item._id?.toString() || index}
               className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
             >
               <p className="text-white mt-2 mb-6 break-words">{item.message}</p>

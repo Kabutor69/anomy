@@ -17,7 +17,13 @@ export async function GET(req: NextRequest) {
       .toArray();
 
     return NextResponse.json({ posts });
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("GET /posts error:", error.message);
+    } else {
+      console.error("GET /posts unknown error:", error);
+    }
+
     return NextResponse.json({ error: "Error fetching posts" }, { status: 500 });
   }
 }

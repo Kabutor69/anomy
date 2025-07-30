@@ -1,14 +1,30 @@
 import Link from "next/link";
 
-const fetchPosts = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/read?limit=3`, {
-    cache: "no-store",
-  });
+export const dynamic = "force-dynamic";
 
-  if (!res.ok) return [];
+type Post = {
+  _id?: string;
+  message: string;
+  createdAt?: string;
+};
 
-  const data = await res.json();
-  return data.posts || [];
+const fetchPosts = async (): Promise<Post[]> => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/api/read?limit=3`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) return [];
+
+    const data = await res.json();
+    return Array.isArray(data.posts) ? data.posts : [];
+  } catch (err) {
+    console.error("Failed to fetch posts:", err);
+    return [];
+  }
 };
 
 const Home = async () => {
@@ -120,9 +136,9 @@ const Home = async () => {
           Recent Posts
         </h2>
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
-          {posts.map((item: any, index: number) => (
+          {posts.map((item: Post, index: number) => (
             <div
-              key={index}
+              key={item._id?.toString() || index}
               className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
             >
               <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
