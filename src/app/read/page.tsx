@@ -49,7 +49,7 @@ const Read = () => {
     <main className="bg-black min-h-screen">
       <section className=" mx-auto px-3 py-40 flex items-center justify-center gap-12 ">
         <div className="text-center md:w-1/2 w-3/4">
-          <h1 className={`md:text-9xl text-5xl font-bold text-white `}>
+          <h1 className={`md:text-8xl text-5xl font-bold text-white `}>
             Read The Unfiltered.
           </h1>
           <p className="mt-6 md:text-4xl text-2xl text-white leading-relaxed">
