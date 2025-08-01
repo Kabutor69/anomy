@@ -13,7 +13,7 @@ const Read = () => {
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const limit = 15;
+  const limit = 12;
 
   const fetchPosts = async () => {
     if (loading || !hasMore) return;
