@@ -91,7 +91,7 @@ const Write = async () => {
           Say Anything, Be No One .
         </div>
          <Link
-          href="/write"
+          href="/read"
            className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105"
             >
           Start Reading
