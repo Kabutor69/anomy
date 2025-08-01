@@ -90,6 +90,12 @@ const Write = async () => {
         <div className="md:text-4xl text-3xl font-bold text-center mb-10">
           Say Anything, Be No One .
         </div>
+         <Link
+          href="/write"
+           className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105"
+            >
+          Start Reading
+        </Link>
       </section>
     </main>
   );
