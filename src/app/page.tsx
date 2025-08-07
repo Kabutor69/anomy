@@ -141,7 +141,7 @@ const Home = async () => {
               key={item._id?.toString() || index}
               className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center md:text-xl text-lg hover:font-semibold"
             >
-              <p className="text-white mt-2 mb-6 break-words">{item.message}</p>
+              <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
             </div>
           ))}
           {posts.length === 0 && (
