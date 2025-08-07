@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Anomy",
-  description: "You can share anything.",
+  description: "No faces, no filters, no names. Just real, honest voices sharing their true thoughts and feelings openly, without fear or judgment. A safe place where your words matter more than who you are.",
 };
 
 export default function RootLayout({
