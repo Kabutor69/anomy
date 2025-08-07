@@ -4,6 +4,7 @@ import clientPromise from "@/lib/mongodb";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const limit = parseInt(searchParams.get("limit") || "12", 10);
+  const skip = parseInt(searchParams.get("skip") || "0", 10);
 
   try {
     const client = await clientPromise;
@@ -13,6 +14,7 @@ export async function GET(req: NextRequest) {
     const posts = await collection
       .find({})
       .sort({ createdAt: -1 })
+      .skip(skip)
       .limit(limit)
       .toArray();
 
