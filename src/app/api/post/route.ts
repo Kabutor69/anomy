@@ -17,12 +17,15 @@ export async function POST(req: Request) {
     const db = client.db("anomy");
     const collection = db.collection("posts");
 
-    await collection.insertOne({
+    const result = await collection.insertOne({
       message,
       createdAt: new Date(),
     });
 
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_HOST}/write`);
+    return NextResponse.json(
+      { success: true, id: result.insertedId },
+      { status: 200 }
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("API POST error:", error.message);

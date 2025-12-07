@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import PostForm from "./PostForm";
 
 export const dynamic = "force-dynamic";
 
@@ -43,29 +44,7 @@ const Write = async () => {
         </div>
       </section>
 
-      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12">
-        <form
-          action="/api/post"
-          method="POST"
-          className="w-full items-center justify-center flex flex-col space-y-6"
-        >
-          <div className="grid grid-cols-1 gap-8 w-full max-w-4xl md:text-2xl text-xl">
-            <textarea
-              name="message"
-              rows={5}
-              placeholder="What's on your mind?"
-              required
-              className="p-4 text-lg rounded-xl bg-neutral-900 border border-white text-white resize-none focus:outline-none focus:ring-2 focus:ring-lime-400"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105"
-          >
-            Post
-          </button>
-        </form>
-      </section>
+      <PostForm />
 
       <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12 mb-16">
         <h2 className="md:text-4xl text-3xl font-bold text-center mb-10">
