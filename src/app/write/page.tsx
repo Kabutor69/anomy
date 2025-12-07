@@ -32,22 +32,21 @@ const Write = async () => {
 
   return (
     <main className="bg-black min-h-screen">
-      <section className=" mx-auto px-3 py-40 flex items-center justify-center gap-12 ">
-        <div className="text-center md:w-1/2 w-3/4">
-          <h1 className={`md:text-8xl text-5xl font-bold text-white `}>
+      <section className="mx-auto px-6 py-20 md:py-40 flex items-center justify-center gap-12">
+        <div className="text-center w-full md:w-1/2">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-bold text-white">
             Speak As None, Judgment Free .
           </h1>
-          <p className="mt-6 md:text-4xl text-2xl text-white leading-relaxed">
-            Share your thoughts anonymously , No login , No identity , Just
-            words.
+          <p className="mt-6 text-xs sm:text-base md:text-lg lg:text-2xl text-neutral-400 leading-relaxed">
+            Express yourself freely, without fear, without judgment, just pure honesty.
           </p>
         </div>
       </section>
 
       <PostForm />
 
-      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12 mb-16">
-        <h2 className="md:text-4xl text-3xl font-bold text-center mb-10">
+      <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12 mb-16">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10">
           Recent Posts
         </h2>
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
@@ -55,7 +54,7 @@ const Write = async () => {
             posts.map((item: Post, index: number) => (
               <div
                 key={item._id?.toString() || index}
-                className="h-full flex flex-col p-10 hover:scale-105 border border-white rounded-xl  hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-xl hover:font-semibold"
+                className="h-full flex flex-col p-8 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
               >
                 <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
               </div>
@@ -66,13 +65,13 @@ const Write = async () => {
         </div>
       </section>
 
-      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12 mb-16">
-        <div className="md:text-4xl text-3xl font-bold text-center mb-10">
+      <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12 mb-16">
+        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10">
           Say Anything, Be No One .
         </div>
          <Link
           href="/read"
-           className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105"
+           className="bg-lime-300 hover:bg-lime-400 text-black px-4 sm:px-6 py-2 sm:py-3 rounded-xl self-center font-semibold transition-all text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl hover:scale-105"
             >
           Start Reading
         </Link>

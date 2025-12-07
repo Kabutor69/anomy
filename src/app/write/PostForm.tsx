@@ -51,7 +51,11 @@ const PostForm = () => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) || "ontouchstart" in window;
+    
+    if (e.key === "Enter" && !e.shiftKey && !isMobile) {
       e.preventDefault();
       if (!isSubmitting && message.trim()) {
         const form = e.currentTarget.form;
@@ -73,10 +77,11 @@ const PostForm = () => {
             color: "#fff",
             border: "1px solid #fff",
             borderRadius: "8px",
-            padding: "12px 16px",
-            fontSize: "14px",
+            padding: "10px 14px",
+            fontSize: "13px",
             fontWeight: "400",
-            minWidth: "200px",
+            minWidth: "180px",
+            maxWidth: "90vw",
           },
           success: {
             iconTheme: {
@@ -98,28 +103,28 @@ const PostForm = () => {
           },
         }}
       />
-      <section className="text-white py-10 px-3 flex flex-col items-center justify-center gap-12">
+      <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12">
         <form
           onSubmit={handleSubmit}
           className="w-full items-center justify-center flex flex-col space-y-6"
         >
-          <div className="grid grid-cols-1 gap-8 w-full max-w-4xl md:text-2xl text-xl">
+          <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
             <textarea
               name="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={5}
-              placeholder="What's on your mind? (Press Enter to submit, Shift+Enter for new line)"
+              placeholder="What's on your mind?"
               required
               disabled={isSubmitting}
-              className="p-4 text-lg rounded-xl bg-neutral-900 border border-white text-white resize-none focus:outline-none focus:ring-2 focus:ring-lime-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-4 text-sm sm:text-base md:text-lg rounded-xl bg-neutral-900 border border-white text-white resize-none focus:outline-none focus:ring-2 focus:ring-lime-400 disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-lime-300 hover:bg-lime-400 text-black px-6 py-3 rounded-xl self-center font-semibold transition-all md:text-2xl text-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="bg-lime-300 hover:bg-lime-400 text-black px-4 sm:px-6 py-2 sm:py-3 rounded-xl self-center font-semibold transition-all text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {isSubmitting ? "Posting..." : "Post"}
           </button>
