@@ -38,6 +38,9 @@ export const metadata: Metadata = {
 
   verification: {
     google: "Q2d_2g4XEV5pIiAAxAEDIvhDvj6-4BihRRx9EcNKkDk",
+    other: {
+      "msvalidate.01": ["5DBC7BAA3648D08C958D38694B757C39"],
+    },
   },
 
   robots: {
@@ -60,7 +63,7 @@ export const metadata: Metadata = {
     siteName: "Anomy",
     images: [
       {
-        url: "/og-image.png", 
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Anomy - Speak Freely",
