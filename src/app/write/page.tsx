@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import PostForm from "./PostForm";
+import LiveFeed from "../components/LiveFeed";
 
 export const dynamic = "force-dynamic";
 
@@ -49,20 +50,7 @@ const Write = async () => {
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-10">
           Recent Posts
         </h2>
-        <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
-          {Array.isArray(posts) && posts.length > 0 ? (
-            posts.map((item: Post, index: number) => (
-              <div
-                key={item._id?.toString() || index}
-                className="h-full flex flex-col p-8 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
-              >
-                <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-neutral-400 text-center">No posts yet.</p>
-          )}
-        </div>
+        <LiveFeed initialPosts={posts} maxItems={4} />
       </section>
 
       <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12 mb-16">

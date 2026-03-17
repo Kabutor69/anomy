@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
+import { publishPostEvent } from "@/lib/liveUpdates";
 
 export async function POST(req: Request) {
   try {
@@ -17,9 +18,17 @@ export async function POST(req: Request) {
     const db = client.db("anomy");
     const collection = db.collection("posts");
 
+    const createdAt = new Date();
+
     const result = await collection.insertOne({
       message,
-      createdAt: new Date(),
+      createdAt,
+    });
+
+    publishPostEvent({
+      _id: result.insertedId.toString(),
+      message,
+      createdAt: createdAt.toISOString(),
     });
 
     return NextResponse.json(

@@ -8,6 +8,12 @@ type Post = {
   createdAt?: string;
 };
 
+type LivePostPayload = {
+  _id: string;
+  message: string;
+  createdAt: string;
+};
+
 const Read = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [skip, setSkip] = useState(0);
@@ -20,10 +26,9 @@ const Read = () => {
 
     setLoading(true);
     const nextSkip = skip;
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_HOST}/api/read?limit=${limit}&skip=${nextSkip}`,
-      { cache: "no-store" }
-    );
+    const res = await fetch(`/api/read?limit=${limit}&skip=${nextSkip}`, {
+      cache: "no-store",
+    });
 
     const data = await res.json();
 
@@ -43,6 +48,38 @@ const Read = () => {
 
   useEffect(() => {
     fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const source = new EventSource("/api/live");
+
+    const handlePostCreated = (event: MessageEvent<string>) => {
+      try {
+        const payload = JSON.parse(event.data) as LivePostPayload;
+
+        setPosts((prev) => {
+          const alreadyExists = prev.some((item) => item._id === payload._id);
+
+          if (alreadyExists) {
+            return prev;
+          }
+
+          return [payload, ...prev];
+        });
+
+        setSkip((prev) => prev + 1);
+      } catch {
+        return;
+      }
+    };
+
+    source.addEventListener("post-created", handlePostCreated as EventListener);
+
+    return () => {
+      source.removeEventListener("post-created", handlePostCreated as EventListener);
+      source.close();
+    };
   }, []);
 
   return (

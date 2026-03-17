@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LiveFeed from "./components/LiveFeed";
 
 export const dynamic = "force-dynamic";
 
@@ -134,19 +135,7 @@ const Home = async () => {
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-10">
           Recent Posts
         </h2>
-        <div className="grid grid-cols-1 gap-6 md:gap-8 w-full max-w-4xl">
-          {posts.map((item: Post, index: number) => (
-            <div
-              key={item._id?.toString() || index}
-              className="h-full flex flex-col p-6 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
-            >
-              <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
-            </div>
-          ))}
-          {posts.length === 0 && (
-            <p className="text-neutral-400 text-center">No posts yet.</p>
-          )}
-        </div>
+        <LiveFeed initialPosts={posts} maxItems={3} />
       </section>
     </main>
   );
