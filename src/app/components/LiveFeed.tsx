@@ -68,7 +68,7 @@ const LiveFeed = ({ initialPosts, maxItems }: LiveFeedProps) => {
           key={item._id?.toString() || index}
           className="h-full flex flex-col p-6 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
         >
-          <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
+          <p className="text-white mt-2 mb-6 warp-break-words whitespace-pre-line">{item.message}</p>
         </div>
       ))}
 

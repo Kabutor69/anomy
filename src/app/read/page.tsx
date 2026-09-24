@@ -16,17 +16,24 @@ type LivePostPayload = {
 
 const Read = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [skip, setSkip] = useState(0);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const limit = 12;
+  const limit = 10;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
 
-  const fetchPosts = async () => {
-    if (loading || !hasMore) return;
-
+  const fetchPosts = async (requestedPage: number, query: string) => {
     setLoading(true);
-    const nextSkip = skip;
-    const res = await fetch(`/api/read?limit=${limit}&skip=${nextSkip}`, {
+    const params = new URLSearchParams({
+      limit: limit.toString(),
+      skip: ((requestedPage - 1) * limit).toString(),
+    });
+
+    if (query) params.set("q", query);
+
+    const res = await fetch(`/api/read?${params.toString()}`, {
       cache: "no-store",
     });
 
@@ -37,19 +44,20 @@ const Read = () => {
       return;
     }
 
-    if (data.posts.length < limit) {
-      setHasMore(false);
-    }
-
-    setPosts((prev) => [...prev, ...data.posts]);
-    setSkip((prev) => prev + limit);
+    setPosts(data.posts);
+    setTotal(data.total || 0);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetchPosts(page, searchTerm);
+  }, [page, searchTerm]);
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPage(1);
+    setSearchTerm(searchInput.trim());
+  };
 
   useEffect(() => {
     const source = new EventSource("/api/live");
@@ -68,7 +76,7 @@ const Read = () => {
           return [payload, ...prev];
         });
 
-        setSkip((prev) => prev + 1);
+        setTotal((prev) => prev + 1);
       } catch {
         return;
       }
@@ -96,28 +104,67 @@ const Read = () => {
       </section>
 
       <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12">
+        <form onSubmit={handleSearch} className="flex w-full max-w-4xl gap-3">
+          <label htmlFor="post-search" className="sr-only">
+            Search posts
+          </label>
+          <input
+            id="post-search"
+            type="search"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            placeholder="Search posts"
+            className="min-w-0 flex-1 rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-lime-300"
+          />
+          <button
+            type="submit"
+            className="rounded-xl bg-lime-300 px-5 py-3 font-semibold text-black transition hover:bg-lime-400"
+          >
+            Search
+          </button>
+        </form>
+
         <div className="grid grid-cols-1 gap-8 w-full max-w-4xl">
           {posts.map((item, index) => (
             <div
               key={item._id?.toString() || index}
               className="h-full flex flex-col p-8 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
             >
-              <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
+              <p className="text-white mt-2 mb-6 warp-break-words whitespace-pre-line">{item.message}</p>
             </div>
           ))}
 
           {posts.length === 0 && (
-            <p className="text-neutral-400 text-center">No posts yet.</p>
+            <p className="text-neutral-400 text-center">
+              {loading ? "Loading..." : searchTerm ? "No matching posts." : "No posts yet."}
+            </p>
           )}
         </div>
 
-        <button
-          onClick={fetchPosts}
-          disabled={loading || !hasMore}
-          className="bg-lime-300 hover:bg-lime-400 text-black px-4 sm:px-6 py-2 sm:py-3 rounded-xl self-center font-semibold transition-all text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-        >
-          {loading ? "Loading..." : hasMore ? "Load More" : "No more posts"}
-        </button>
+        {total > 0 && (
+          <nav
+            aria-label="Posts pagination"
+            className="flex w-full max-w-4xl items-center justify-between border-t border-neutral-800 pt-6 text-sm sm:text-base"
+          >
+            <button
+              onClick={() => setPage((current) => current - 1)}
+              disabled={loading || page === 1}
+              className="text-neutral-400 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <span aria-hidden="true">‹</span> Previous
+            </button>
+            <span className="text-neutral-400" aria-live="polite">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((current) => current + 1)}
+              disabled={loading || page === totalPages}
+              className="text-neutral-400 transition hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              Next <span aria-hidden="true">›</span>
+            </button>
+          </nav>
+        )}
       </section>
 
       <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12 mb-16">
