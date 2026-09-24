@@ -66,9 +66,9 @@ const LiveFeed = ({ initialPosts, maxItems }: LiveFeedProps) => {
       {posts.map((item, index) => (
         <div
           key={item._id?.toString() || index}
-          className="h-full flex flex-col p-6 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
+          className="min-w-0 max-w-full overflow-hidden h-full flex flex-col p-6 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
         >
-          <p className="text-white mt-2 mb-6 break-words whitespace-pre-line">{item.message}</p>
+          <p className="min-w-0 max-w-full text-white mt-2 mb-6 wrap-anywhere whitespace-pre-line">{item.message}</p>
         </div>
       ))}
 

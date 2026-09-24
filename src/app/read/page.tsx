@@ -62,7 +62,7 @@ const Read = () => {
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
-    postsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -111,16 +111,10 @@ const Read = () => {
 
       <section className="text-white py-10 px-6 flex flex-col items-center justify-center gap-12">
         <div className="w-full max-w-4xl">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">
-            Explore the archive
-          </p>
           <form
             onSubmit={handleSearch}
-            className="flex items-center gap-3 rounded-2xl border border-neutral-800 bg-neutral-950/80 p-2 shadow-[0_18px_50px_rgba(0,0,0,0.25)] transition focus-within:border-lime-300/60"
+            className="flex w-full items-center border-b border-neutral-800 py-2 transition focus-within:border-lime-300"
           >
-            <span className="pl-3 text-lg text-neutral-500" aria-hidden="true">
-              /
-            </span>
             <label htmlFor="post-search" className="sr-only">
               Search posts
             </label>
@@ -129,8 +123,8 @@ const Read = () => {
               type="search"
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search a thought"
-              className="min-w-0 flex-1 bg-transparent px-1 py-2 text-sm text-white outline-none placeholder:text-neutral-600 sm:text-base"
+              placeholder="Search posts"
+              className="min-w-0 flex-1 bg-transparent px-0 py-3 text-sm text-white outline-none placeholder:text-neutral-600 sm:text-base"
             />
             {searchInput && (
               <button
@@ -141,27 +135,27 @@ const Read = () => {
                   setPage(1);
                 }}
                 aria-label="Clear search"
-                className="px-2 text-lg leading-none text-neutral-500 transition hover:text-white"
+                className="px-3 text-lg leading-none text-neutral-500 transition hover:text-white"
               >
                 ×
               </button>
             )}
             <button
               type="submit"
-              className="rounded-xl bg-lime-300 px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-lime-400"
+              className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-lime-300 transition hover:text-lime-200"
             >
               Search
             </button>
           </form>
         </div>
 
-        <div ref={postsRef} className="grid scroll-mt-6 grid-cols-1 gap-8 w-full max-w-4xl">
+        <div ref={postsRef} className="grid min-w-0 w-full max-w-4xl grid-cols-1 gap-8">
           {posts.map((item, index) => (
             <div
               key={item._id?.toString() || index}
-              className="h-full flex flex-col p-8 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
+              className="min-w-0 max-w-full overflow-hidden h-full flex flex-col p-8 md:p-10 hover:scale-105 border border-white rounded-xl hover:shadow-lg shadow-neutral-600 transition-all bg-neutral-950 justify-center text-sm sm:text-base md:text-lg lg:text-xl hover:font-semibold"
             >
-              <p className="text-white mt-2 mb-6 break-word whitespace-pre-line">{item.message}</p>
+              <p className="min-w-0 max-w-full text-white mt-2 mb-6 wrap-anywhere whitespace-pre-line">{item.message}</p>
             </div>
           ))}
 
